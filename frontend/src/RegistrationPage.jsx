@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css"; // Import the CSS
 
 const RegistrationPage = () => {
@@ -8,10 +8,10 @@ const RegistrationPage = () => {
     username: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleRegistrationChange = (e) => {
     const { name, value } = e.target;
-
     setRegistrationData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -25,7 +25,12 @@ const RegistrationPage = () => {
         "http://localhost:8000/register",
         registrationData
       );
-      console.log(response.data);
+      if (response.data.success) {
+        // Navigate to login page after successful registration
+        navigate("/login");
+      } else {
+        console.log(response.data.message);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +52,6 @@ const RegistrationPage = () => {
           onChange={handleRegistrationChange}
           required
         />
-
         <input
           type="password"
           name="password"
